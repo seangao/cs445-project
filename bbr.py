@@ -1,4 +1,4 @@
-import csv, urllib2
+import csv, urllib2, urlparse
 from bs4 import BeautifulSoup
 
 
@@ -20,7 +20,7 @@ def boxscores_to_file(years):
 		if year == 2012: # lockout year
 			months = months[2:]
 		for month in months:
-			games += [game + [year] for game in get_games(month, year)]
+			games += [game + [year] for game in get_boxscore(month, year)]
 	with open('games.csv', 'w') as f:
 		writer = csv.writer(f)
 		writer.writerows(games)
@@ -40,6 +40,9 @@ def player_stats(year, stat_type='per_game'):
 	else:
 		players = [[td.getText() for td in row.findAll('td')] for row in rows]
 		header = [th.getText() for th in header.findAll('th')][1:]
+	ids = soup.findAll('td', {'data-append-csv':True})
+	players = [[ids[i]['data-append-csv']] + players[i] for i in xrange(len(ids)) if players[i]]
+	header = ['ID'] + header
 	return header, players
 
 def player_stats_to_file(years, stat_type='per_game'):
@@ -53,7 +56,33 @@ def player_stats_to_file(years, stat_type='per_game'):
 		writer = csv.writer(f)
 		writer.writerows([header] + all_stats)
 
-years = [2012, 2013, 2014, 2015, 2016]
-boxscores_to_file(years)
-player_stats_to_file(years)
-player_stats_to_file(years, 'advanced')
+def player_points(player_id, year):
+	url = 'http://www.basketball-reference.com/players/%s/%s/gamelog/%d' % (player_id[0], player_id, year)
+	html = urllib2.urlopen(url).read()
+	soup = BeautifulSoup(html, 'lxml')
+	rows = soup.findAll('tr')
+	data = [[td.getText() for td in row.findAll('td')] for row in rows]
+	points = [int(row[-3]) for row in data if len(row) == 29]
+	return points
+
+def team_roster(team, year):
+	url = 'http://www.basketball-reference.com/teams/%s/%d.html' % (team.upper(), year)
+	html = urllib2.urlopen(url).read()
+	soup = BeautifulSoup(html, 'lxml')
+	div = soup.find('div', {'id' : 'all_roster'})
+	ids = div.findAll('td', {'data-append-csv' : True})
+	return [ids[i]['data-append-csv'] for i in xrange(len(ids))]
+
+def team_stats(year):
+	url = 'http://www.basketball-reference.com/leagues/NBA_%d.html' % year
+	html = urllib2.urlopen(url).read()
+	soup = BeautifulSoup(html, 'lxml')
+
+if __name__ == '__main__':
+	years = [2011, 2012, 2013, 2014, 2015, 2016]
+	boxscores_to_file(years)
+	player_stats_to_file(years)
+	player_stats_to_file(years, 'advanced')
+	print player_points('curryst01', 2017)
+	print team_roster('gsw', 2016)
+print team_stats(2016)
