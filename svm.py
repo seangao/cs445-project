@@ -1,0 +1,15 @@
+from sklearn import svm
+import pandas as pd
+import numpy as np
+
+Xtrain = np.array(pd.read_csv('csv/x_train.csv', sep=','))[:, 1:]
+ytrain = np.array(pd.read_csv('csv/y_train.csv', sep=',', header=None))
+Xtest = np.array(pd.read_csv('csv/x_test.csv', sep=','))[:, 1:]
+ytest = np.array(pd.read_csv('csv/y_test.csv', sep=',', header=None))
+
+clf = svm.SVC()
+clf.fit(Xtrain, ytrain)
+
+p = clf.predict(Xtest)
+
+print np.sum(p == np.ravel(ytest)) / (len(p) + 0.0)
