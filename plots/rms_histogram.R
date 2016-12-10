@@ -8,5 +8,5 @@ df$model <- factor(df$model, levels = unique(df$model))
 ggplot(df, aes(x=factor(model), y=rms, fill=method)) +
   geom_bar(stat="identity", position="dodge") +
   scale_fill_brewer(palette="Set1") +
-  labs(x = "Model Type", y="RMS", title="RMS per model")
+  labs(x = "Model Type", y="RMSE", title="RMSE per model")
 ggsave("rms_plot.png")
