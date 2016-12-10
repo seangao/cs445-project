@@ -10,5 +10,5 @@ ggplot(df, aes(x=factor(model), y=rms, fill=method)) +
   scale_fill_brewer(palette="Set1") +
   labs(x = "Model Type", y="RMSE", title="RMSE per model") +
   theme(axis.text=element_text(size=12),
-        axis.title=element_text(size=14,face="bold"))
+        axis.title=element_text(size=14))
 ggsave("rms_plot.png")

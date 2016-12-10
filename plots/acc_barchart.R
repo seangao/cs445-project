@@ -9,5 +9,5 @@ ggplot(acc_df, aes(x=model, y=acc, fill=model)) +
   labs(x = "Model Type", y="Acc", title="Model Accuracy") +
   coord_cartesian(ylim = c(0.5, 0.7)) +
   theme(axis.text=element_text(size=12),
-        axis.title=element_text(size=14,face="bold"))
+        axis.title=element_text(size=14))
 ggsave("acc_plot.png")
