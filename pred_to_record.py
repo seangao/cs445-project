@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import csv
 
 def pred_to_record(pred):
 	results = pd.read_csv('games_test.csv', header=None)
@@ -42,3 +43,25 @@ def rms_round(pred):
 	for team in pred_record:
 		RMS += (round(pred_record[team][0])-actual_record[team][0])**2
 	return (RMS/len(pred_record))**.5
+
+def to_csv(pred, name):
+	all_games = pd.read_csv('csv/games.csv', header=None)
+
+	wins = {}
+	games = all_games[all_games[4] == 2016]
+	for index, game in games.iterrows():
+	    if game[3] > game[1]:
+	        if game[2] not in wins:
+	            wins[game[2]] = 1
+	        else:
+	            wins[game[2]] += 1
+	    else:
+	        if game[0] not in wins:
+	            wins[game[0]] = 1
+	        else:
+	            wins[game[0]] += 1
+
+	pr_vs_actual = [[i, int(round(pred[i][0])), wins[i]] for i in pred]
+	with open('csv/%s.csv' % name, 'w') as f:
+		writer = csv.writer(f)
+		writer.writerows(pr_vs_actual)
