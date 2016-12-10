@@ -31,3 +31,14 @@ def rms(pred):
 	for team in pred_record:
 		RMS += (pred_record[team][0]-actual_record[team][0])**2
 	return (RMS/len(pred_record))**.5
+
+def rms_round(pred):
+	actual = list(pd.read_csv('csv/y_test.csv', header=None)[0])
+
+	pred_record = pred_to_record(pred)
+	actual_record = pred_to_record(actual)
+
+	RMS = 0
+	for team in pred_record:
+		RMS += (round(pred_record[team][0])-actual_record[team][0])**2
+	return (RMS/len(pred_record))**.5
