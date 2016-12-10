@@ -7,7 +7,7 @@ ytrain = np.array(pd.read_csv('csv/y_train.csv', sep=',', header=None))
 Xtest = np.array(pd.read_csv('csv/x_test.csv', sep=','))[:, 1:]
 ytest = np.array(pd.read_csv('csv/y_test.csv', sep=',', header=None))
 
-clf = svm.SVC()
+clf = svm.SVC(C = 0.5, kernel='linear')
 clf.fit(Xtrain, ytrain)
 
 p = clf.predict(Xtest)
