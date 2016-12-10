@@ -2,6 +2,37 @@ import pandas as pd
 import numpy as np
 import csv
 
+colors = {'Atlanta Hawks': '#E03A3E',
+	'Boston Celtics': '#008348',
+	'Brooklyn Nets': '#000000',
+	'Charlotte Hornets': '#1D1160',
+	'Chicago Bulls': '#CE1141',
+	'Cleveland Cavaliers': '#860038',
+	'Dallas Mavericks': '#20385B',
+	'Denver Nuggets': '#4FA8FF',
+	'Detroit Pistons': '#001F70',
+	'Golden State Warriors': '#006BB6',
+	'Houston Rockets': '#CE1141',
+	'Indiana Pacers': '#00275D',
+	'Los Angeles Clippers': '#ED174C',
+	'Los Angeles Lakers': '#552582',
+	'Memphis Grizzlies': '#23375B',
+	'Miami Heat': '#98002E',
+	'Milwaukee Bucks': '#00471B',
+	'Minnesota Timberwolves': '#005083',
+	'New Orleans Pelicans': '#002B5C',
+	'New York Knicks': '#F58426',
+	'Oklahoma City Thunder': '#007DC3',
+	'Orlando Magic': '#007DC5',
+	'Philadelphia 76ers': '#006BB6',
+	'Phoenix Suns': '#1D1160',
+	'Portland Trail Blazers': '#F0163A',
+	'Sacramento Kings': '#724C9F',
+	'San Antonio Spurs': '#000000',
+	'Toronto Raptors': '#CE1141',
+	'Utah Jazz': '#002B5C',
+	'Washington Wizards': '#002566'}
+
 def pred_to_record(pred):
 	results = pd.read_csv('games_test.csv', header=None)
 	teams = pd.read_csv('teams.csv', header=None)
@@ -61,7 +92,7 @@ def to_csv(pred, name):
 	        else:
 	            wins[game[0]] += 1
 
-	pr_vs_actual = [[i, int(round(pred[i][0])), wins[i]] for i in pred]
+	pr_vs_actual = [[i, int(round(pred[i][0])), wins[i], colors[i]] for i in pred]
 	with open('csv/%s.csv' % name, 'w') as f:
 		writer = csv.writer(f)
 		writer.writerows(pr_vs_actual)
